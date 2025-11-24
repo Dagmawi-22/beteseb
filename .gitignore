@@ -1,3 +1,9 @@
 app/node_modules
 server/node_modules
 .claude
+app/dist
+server/dist
+.env
+app/.env
+server/.env
+.DS_Store
