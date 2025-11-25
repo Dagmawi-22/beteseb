@@ -1,6 +1,5 @@
 import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 
-// Example schema - you can modify this based on your needs
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   username: varchar('username', { length: 255 }).notNull().unique(),
@@ -11,8 +10,12 @@ export const users = pgTable('users', {
 
 export const messages = pgTable('messages', {
   id: serial('id').primaryKey(),
-  userId: serial('user_id').references(() => users.id),
+  senderId: serial('sender_id')
+    .references(() => users.id)
+    .notNull(),
+  recipientId: serial('recipient_id')
+    .references(() => users.id)
+    .notNull(),
   content: text('content').notNull(),
-  topic: varchar('topic', { length: 255 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
