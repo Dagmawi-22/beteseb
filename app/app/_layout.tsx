@@ -44,7 +44,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <ChatProvider>
         <RootLayoutNav />
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
       </ChatProvider>
     </ThemeProvider>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-} from 'react-native';
-import { useChatContext } from '../../context/ChatContext';
-import { mockAvatarOptions } from '../../mock/data';
+} from "react-native";
+import { useChatContext } from "../../context/ChatContext";
+import { mockAvatarOptions } from "../../mock/data";
 
 export default function ProfileScreen() {
   const { currentUser, updateCurrentUser } = useChatContext();
   const [name, setName] = useState(currentUser.name);
   const [email, setEmail] = useState(currentUser.email);
-  const [bio, setBio] = useState(currentUser.bio || '');
+  const [bio, setBio] = useState(currentUser.bio || "");
   const [selectedAvatar, setSelectedAvatar] = useState(
     currentUser.avatar || mockAvatarOptions[0]
   );
@@ -24,7 +24,7 @@ export default function ProfileScreen() {
 
   const handleSave = () => {
     if (!name || !email) {
-      Alert.alert('Error', 'Name and email are required');
+      Alert.alert("Error", "Name and email are required");
       return;
     }
 
@@ -36,13 +36,13 @@ export default function ProfileScreen() {
     });
 
     setIsEditing(false);
-    Alert.alert('Success', 'Profile updated successfully!');
+    Alert.alert("Success", "Profile updated successfully!");
   };
 
   const handleCancel = () => {
     setName(currentUser.name);
     setEmail(currentUser.email);
-    setBio(currentUser.bio || '');
+    setBio(currentUser.bio || "");
     setSelectedAvatar(currentUser.avatar || mockAvatarOptions[0]);
     setIsEditing(false);
   };
@@ -60,7 +60,10 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         ) : (
           <View style={styles.actionButtons}>
-            <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={handleCancel}
+            >
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
@@ -73,7 +76,9 @@ export default function ProfileScreen() {
       <View style={styles.content}>
         <View style={styles.avatarSection}>
           <Image source={{ uri: selectedAvatar }} style={styles.mainAvatar} />
-          {isEditing && <Text style={styles.avatarLabel}>Choose Your Avatar</Text>}
+          {isEditing && (
+            <Text style={styles.avatarLabel}>Choose Your Avatar</Text>
+          )}
         </View>
 
         {isEditing && (
@@ -133,13 +138,6 @@ export default function ProfileScreen() {
             placeholderTextColor="#999"
           />
         </View>
-
-        <View style={styles.statsSection}>
-          <View style={styles.statCard}>
-            <Text style={styles.statValue}>{currentUser.id}</Text>
-            <Text style={styles.statLabel}>User ID</Text>
-          </View>
-        </View>
       </View>
     </ScrollView>
   );
@@ -148,64 +146,64 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
     paddingTop: 60,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#000',
+    fontWeight: "bold",
+    color: "#000",
   },
   editButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
   },
   editButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   actionButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
   },
   cancelButton: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
   },
   cancelButtonText: {
-    color: '#666',
+    color: "#666",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   saveButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
   },
   saveButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   content: {
     padding: 20,
   },
   avatarSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 24,
   },
   mainAvatar: {
@@ -214,18 +212,18 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     marginBottom: 16,
     borderWidth: 4,
-    borderColor: '#007AFF',
+    borderColor: "#007AFF",
   },
   avatarLabel: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
     marginBottom: 12,
   },
   avatarGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
     gap: 12,
     marginBottom: 24,
   },
@@ -234,15 +232,15 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 3,
-    borderColor: 'transparent',
+    borderColor: "transparent",
     padding: 2,
   },
   avatarSelected: {
-    borderColor: '#007AFF',
+    borderColor: "#007AFF",
   },
   avatarImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderRadius: 27,
   },
   section: {
@@ -250,44 +248,44 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#f9f9f9',
-    color: '#000',
+    backgroundColor: "#f9f9f9",
+    color: "#000",
   },
   inputDisabled: {
-    backgroundColor: '#f0f0f0',
-    color: '#666',
+    backgroundColor: "#f0f0f0",
+    color: "#666",
   },
   bioInput: {
     height: 80,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   statsSection: {
     marginTop: 24,
   },
   statCard: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     padding: 16,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statValue: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
 });
