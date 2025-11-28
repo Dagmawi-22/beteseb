@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useChatContext } from '../context/ChatContext';
 import { mockAvatarOptions } from '../mock/data';
+import { AppColors } from '../constants/colors';
 
 export default function OnboardingScreen() {
   const router = useRouter();
@@ -109,7 +110,7 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.background,
   },
   content: {
     padding: 20,
@@ -118,12 +119,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#000',
+    color: AppColors.text,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: AppColors.textSecondary,
     marginBottom: 32,
   },
   section: {
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    color: AppColors.text,
     marginBottom: 8,
   },
   avatarGrid: {
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   avatarSelected: {
-    borderColor: '#000',
+    borderColor: AppColors.primary,
   },
   avatarImage: {
     width: '100%',
@@ -158,19 +159,19 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: AppColors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#f9f9f9',
-    color: '#000',
+    backgroundColor: AppColors.inputBackground,
+    color: AppColors.text,
   },
   bioInput: {
     height: 80,
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#000',
+    backgroundColor: AppColors.primary,
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   buttonText: {
-    color: '#fff',
+    color: AppColors.white,
     fontSize: 18,
     fontWeight: '600',
   },

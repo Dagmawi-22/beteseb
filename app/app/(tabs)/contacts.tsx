@@ -10,6 +10,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useChatContext } from '../../context/ChatContext';
 import { Contact } from '../../types/chat';
+import { AppColors } from '../../constants/colors';
 
 export default function ContactsScreen() {
   const router = useRouter();
