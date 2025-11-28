@@ -103,7 +103,7 @@ export default function ContactsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.background,
   },
   header: {
     flexDirection: 'row',
@@ -112,21 +112,21 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingTop: 60,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: AppColors.borderLight,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#000',
+    color: AppColors.text,
   },
   addButton: {
-    backgroundColor: '#000',
+    backgroundColor: AppColors.primary,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
   },
   addButtonText: {
-    color: '#fff',
+    color: AppColors.white,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: AppColors.disabledBackground,
   },
   avatarContainer: {
     position: 'relative',
@@ -156,9 +156,9 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#4CAF50',
+    backgroundColor: AppColors.success,
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: AppColors.white,
   },
   contactInfo: {
     flex: 1,
@@ -172,18 +172,18 @@ const styles = StyleSheet.create({
   contactName: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#000',
+    color: AppColors.text,
   },
   lastSeen: {
     fontSize: 13,
-    color: '#999',
+    color: AppColors.textTertiary,
   },
   lastMessage: {
     fontSize: 15,
-    color: '#666',
+    color: AppColors.textSecondary,
   },
   unreadBadge: {
-    backgroundColor: '#000',
+    backgroundColor: AppColors.primary,
     borderRadius: 12,
     minWidth: 24,
     height: 24,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   unreadText: {
-    color: '#fff',
+    color: AppColors.white,
     fontSize: 12,
     fontWeight: '600',
   },
