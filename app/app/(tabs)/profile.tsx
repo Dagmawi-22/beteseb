@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   editButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#000",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   saveButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#000",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     marginBottom: 16,
     borderWidth: 4,
-    borderColor: "#007AFF",
+    borderColor: "#000",
   },
   avatarLabel: {
     fontSize: 16,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   avatarSelected: {
-    borderColor: "#007AFF",
+    borderColor: "#000",
   },
   avatarImage: {
     width: "100%",

@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   avatarSelected: {
-    borderColor: '#007AFF',
+    borderColor: '#000',
   },
   avatarImage: {
     width: '100%',
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#000',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',

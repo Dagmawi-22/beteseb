@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 28,
-    color: '#007AFF',
+    color: '#000',
   },
   headerAvatar: {
     width: 40,
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   ownBubble: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#000',
     borderBottomRightRadius: 4,
   },
   otherBubble: {
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   sendButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#000',
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,

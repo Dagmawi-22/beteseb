@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   addButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#000',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   unreadBadge: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#000',
     borderRadius: 12,
     minWidth: 24,
     height: 24,
