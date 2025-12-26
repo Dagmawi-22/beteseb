@@ -28,6 +28,29 @@ export class ChatService {
     };
   }
 
+  static async getUserByEmail(email: string): Promise<User | null> {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user by email:', error);
+      return null;
+    }
+
+    return {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      avatar: data.avatar || undefined,
+      bio: data.bio || undefined,
+      isOnboarded: data.is_onboarded,
+      publicKey: data.public_key || undefined,
+    };
+  }
+
   static async updateUser(userId: string, updates: Partial<User>): Promise<void> {
     const { error } = await supabase
       .from('users')

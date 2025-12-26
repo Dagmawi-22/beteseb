@@ -17,6 +17,7 @@ import { AppColors } from '../constants/colors';
 
 export default function OnboardingScreen() {
   const router = useRouter();
+  const [mode, setMode] = useState<'login' | 'signup'>('signup');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [bio, setBio] = useState('Hey there! I am using Beteseb Chat App');
@@ -24,67 +25,109 @@ export default function OnboardingScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleComplete = async () => {
-    if (!name || !email) {
-      alert('Please fill in your name and email');
-      return;
-    }
+    if (mode === 'login') {
+      // Login flow
+      if (!email) {
+        alert('Please enter your email');
+        return;
+      }
 
-    setLoading(true);
-    try {
-      // Create user in Supabase
-      const user = await AuthService.signup({
-        name,
-        email,
-        bio,
-        avatar: selectedAvatar,
-      });
+      setLoading(true);
+      try {
+        const user = await AuthService.login(email);
+        setCurrentUserId(user.id);
+        router.replace('/(tabs)');
+      } catch (error: any) {
+        alert(error.message || 'Login failed');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // Signup flow
+      if (!name || !email) {
+        alert('Please fill in your name and email');
+        return;
+      }
 
-      // Set the current user ID for ChatContext
-      setCurrentUserId(user.id);
+      setLoading(true);
+      try {
+        const user = await AuthService.signup({
+          name,
+          email,
+          bio,
+          avatar: selectedAvatar,
+        });
 
-      // Navigate to main app
-      router.replace('/(tabs)');
-    } catch (error: any) {
-      alert(error.message || 'Failed to create account');
-    } finally {
-      setLoading(false);
+        setCurrentUserId(user.id);
+        router.replace('/(tabs)');
+      } catch (error: any) {
+        alert(error.message || 'Failed to create account');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Welcome to Chat App!</Text>
-        <Text style={styles.subtitle}>Let's set up your profile</Text>
+        <Text style={styles.title}>Welcome to Beteseb!</Text>
+        <Text style={styles.subtitle}>
+          {mode === 'signup' ? "Let's set up your profile" : 'Welcome back!'}
+        </Text>
 
-        <View style={styles.section}>
-          <Text style={styles.label}>Choose Your Avatar</Text>
-          <View style={styles.avatarGrid}>
-            {mockAvatarOptions.map((avatarUrl) => (
-              <TouchableOpacity
-                key={avatarUrl}
-                onPress={() => setSelectedAvatar(avatarUrl)}
-                style={[
-                  styles.avatarOption,
-                  selectedAvatar === avatarUrl && styles.avatarSelected,
-                ]}
-              >
-                <Image source={{ uri: avatarUrl }} style={styles.avatarImage} />
-              </TouchableOpacity>
-            ))}
-          </View>
+        {/* Mode Toggle */}
+        <View style={styles.modeToggle}>
+          <TouchableOpacity
+            style={[styles.modeButton, mode === 'signup' && styles.modeButtonActive]}
+            onPress={() => setMode('signup')}
+          >
+            <Text style={[styles.modeButtonText, mode === 'signup' && styles.modeButtonTextActive]}>
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.modeButton, mode === 'login' && styles.modeButtonActive]}
+            onPress={() => setMode('login')}
+          >
+            <Text style={[styles.modeButtonText, mode === 'login' && styles.modeButtonTextActive]}>
+              Login
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.label}>Your Name *</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your name"
-            value={name}
-            onChangeText={setName}
-            placeholderTextColor={AppColors.textTertiary}
-          />
-        </View>
+        {mode === 'signup' && (
+          <>
+            <View style={styles.section}>
+              <Text style={styles.label}>Choose Your Avatar</Text>
+              <View style={styles.avatarGrid}>
+                {mockAvatarOptions.map((avatarUrl) => (
+                  <TouchableOpacity
+                    key={avatarUrl}
+                    onPress={() => setSelectedAvatar(avatarUrl)}
+                    style={[
+                      styles.avatarOption,
+                      selectedAvatar === avatarUrl && styles.avatarSelected,
+                    ]}
+                  >
+                    <Image source={{ uri: avatarUrl }} style={styles.avatarImage} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.label}>Your Name *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your name"
+                value={name}
+                onChangeText={setName}
+                placeholderTextColor={AppColors.textTertiary}
+              />
+            </View>
+          </>
+        )}
 
         <View style={styles.section}>
           <Text style={styles.label}>Email *</Text>
@@ -99,18 +142,20 @@ export default function OnboardingScreen() {
           />
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.label}>Bio (Optional)</Text>
-          <TextInput
-            style={[styles.input, styles.bioInput]}
-            placeholder="Tell us about yourself"
-            value={bio}
-            onChangeText={setBio}
-            multiline
-            numberOfLines={3}
-            placeholderTextColor={AppColors.textTertiary}
-          />
-        </View>
+        {mode === 'signup' && (
+          <View style={styles.section}>
+            <Text style={styles.label}>Bio (Optional)</Text>
+            <TextInput
+              style={[styles.input, styles.bioInput]}
+              placeholder="Tell us about yourself"
+              value={bio}
+              onChangeText={setBio}
+              multiline
+              numberOfLines={3}
+              placeholderTextColor={AppColors.textTertiary}
+            />
+          </View>
+        )}
 
         <TouchableOpacity
           style={[styles.button, loading && styles.buttonDisabled]}
@@ -120,7 +165,9 @@ export default function OnboardingScreen() {
           {loading ? (
             <ActivityIndicator color={AppColors.white} />
           ) : (
-            <Text style={styles.buttonText}>Get Started</Text>
+            <Text style={styles.buttonText}>
+              {mode === 'signup' ? 'Get Started' : 'Login'}
+            </Text>
           )}
         </TouchableOpacity>
       </View>
@@ -146,7 +193,31 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     color: AppColors.textSecondary,
+    marginBottom: 24,
+  },
+  modeToggle: {
+    flexDirection: 'row',
     marginBottom: 32,
+    borderRadius: 8,
+    backgroundColor: AppColors.inputBackground,
+    padding: 4,
+  },
+  modeButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 6,
+  },
+  modeButtonActive: {
+    backgroundColor: AppColors.primary,
+  },
+  modeButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: AppColors.textSecondary,
+  },
+  modeButtonTextActive: {
+    color: AppColors.white,
   },
   section: {
     marginBottom: 24,

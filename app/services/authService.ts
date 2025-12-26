@@ -6,24 +6,15 @@ import { User } from "../types/chat";
 const USER_ID_KEY = "@user_id";
 
 export class AuthService {
-  /**
-   * Check if user is logged in
-   */
   static async isLoggedIn(): Promise<boolean> {
     const userId = await AsyncStorage.getItem(USER_ID_KEY);
     return userId !== null;
   }
 
-  /**
-   * Get current user ID from storage
-   */
   static async getCurrentUserId(): Promise<string | null> {
     return await AsyncStorage.getItem(USER_ID_KEY);
   }
 
-  /**
-   * Create a new user (simplified auth - no password)
-   */
   static async signup(userData: {
     name: string;
     email: string;
@@ -53,29 +44,33 @@ export class AuthService {
     }
   }
 
-  /**
-   * Login (simplified - finds user by email)
-   */
-  static async login(email: string): Promise<User | null> {
+  static async login(email: string): Promise<User> {
     try {
-      throw new Error("Login not yet implemented - please sign up");
-    } catch (error) {
+      const user = await ChatService.getUserByEmail(email);
+
+      if (!user) {
+        throw new Error('User not found. Please sign up first.');
+      }
+
+      await AsyncStorage.setItem(USER_ID_KEY, user.id);
+     const hasKeys = await EncryptionService.hasKeys();
+      if (!hasKeys) {
+        console.warn('No encryption keys found on this device. Messages cannot be decrypted.');
+      }
+
+      return user;
+    } catch (error: any) {
       console.error("Login error:", error);
-      return null;
+      throw error;
     }
   }
 
-  /**
-   * Logout
-   */
   static async logout(): Promise<void> {
     await AsyncStorage.removeItem(USER_ID_KEY);
     await EncryptionService.clearKeys();
   }
 
-  /**
-   * Get current user data
-   */
+
   static async getCurrentUser(): Promise<User | null> {
     const userId = await this.getCurrentUserId();
     if (!userId) return null;
