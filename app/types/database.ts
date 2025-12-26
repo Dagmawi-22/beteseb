@@ -17,6 +17,7 @@ export interface Database {
           avatar: string | null
           bio: string | null
           is_onboarded: boolean
+          public_key: string | null
           created_at: string
           updated_at: string
         }
@@ -27,6 +28,7 @@ export interface Database {
           avatar?: string | null
           bio?: string | null
           is_onboarded?: boolean
+          public_key?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -37,6 +39,7 @@ export interface Database {
           avatar?: string | null
           bio?: string | null
           is_onboarded?: boolean
+          public_key?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -67,6 +70,8 @@ export interface Database {
           sender_id: string
           receiver_id: string
           content: string
+          encrypted_key: string
+          iv: string
           is_read: boolean
           created_at: string
           updated_at: string
@@ -76,6 +81,8 @@ export interface Database {
           sender_id: string
           receiver_id: string
           content: string
+          encrypted_key: string
+          iv: string
           is_read?: boolean
           created_at?: string
           updated_at?: string
@@ -85,6 +92,8 @@ export interface Database {
           sender_id?: string
           receiver_id?: string
           content?: string
+          encrypted_key?: string
+          iv?: string
           is_read?: boolean
           created_at?: string
           updated_at?: string

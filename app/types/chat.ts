@@ -5,6 +5,7 @@ export interface User {
   avatar?: string;
   bio?: string;
   isOnboarded: boolean;
+  publicKey?: string; 
 }
 
 export interface Contact {
@@ -14,6 +15,7 @@ export interface Contact {
   avatar?: string;
   lastSeen?: Date;
   isOnline: boolean;
+  publicKey?: string; 
 }
 
 export interface Message {

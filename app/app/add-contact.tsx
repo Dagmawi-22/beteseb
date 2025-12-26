@@ -20,23 +20,18 @@ export default function AddContactScreen() {
   const [email, setEmail] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState(mockAvatarOptions[3]);
 
-  const handleAddContact = () => {
-    if (!name || !email) {
-      alert('Please fill in name and email');
+  const handleAddContact = async () => {
+    if (!email) {
+      alert('Please enter an email address');
       return;
     }
 
-    const newContact = {
-      id: `contact-${Date.now()}`,
-      name,
-      email,
-      avatar: selectedAvatar,
-      isOnline: false,
-      lastSeen: new Date(),
-    };
-
-    addContact(newContact);
-    router.back();
+    try {
+      await addContact(email);
+      router.back();
+    } catch (error) {
+      alert('Failed to add contact. Please make sure the email is registered.');
+    }
   };
 
   return (

@@ -32,10 +32,10 @@ export default function ChatScreen() {
     }
   }, [contactId]);
 
-  const handleSend = () => {
-    if (!messageText.trim() || !contactId) return;
+  const handleSend = async () => {
+    if (!messageText.trim() || !contactId || !currentUser) return;
 
-    sendMessage({
+    await sendMessage({
       senderId: currentUser.id,
       receiverId: contactId,
       content: messageText.trim(),

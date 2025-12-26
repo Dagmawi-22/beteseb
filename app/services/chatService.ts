@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase';
 import { User, Contact, Message } from '../types/chat';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { EncryptionService } from './encryptionService';
 
 export class ChatService {
   // User operations
@@ -23,6 +24,7 @@ export class ChatService {
       avatar: data.avatar || undefined,
       bio: data.bio || undefined,
       isOnboarded: data.is_onboarded,
+      publicKey: data.public_key || undefined,
     };
   }
 
@@ -35,6 +37,7 @@ export class ChatService {
         avatar: updates.avatar,
         bio: updates.bio,
         is_onboarded: updates.isOnboarded,
+        public_key: updates.publicKey,
         updated_at: new Date().toISOString(),
       })
       .eq('id', userId);
@@ -54,6 +57,7 @@ export class ChatService {
         avatar: user.avatar,
         bio: user.bio,
         is_onboarded: user.isOnboarded,
+        public_key: user.publicKey,
       })
       .select()
       .single();
@@ -70,6 +74,7 @@ export class ChatService {
       avatar: data.avatar || undefined,
       bio: data.bio || undefined,
       isOnboarded: data.is_onboarded,
+      publicKey: data.public_key || undefined,
     };
   }
 
@@ -83,7 +88,8 @@ export class ChatService {
           id,
           name,
           email,
-          avatar
+          avatar,
+          public_key
         )
       `)
       .eq('user_id', userId);
@@ -99,6 +105,7 @@ export class ChatService {
       email: contact.users.email,
       avatar: contact.users.avatar || undefined,
       isOnline: false, // Will be updated via presence
+      publicKey: contact.users.public_key || undefined,
     }));
   }
 
@@ -134,6 +141,7 @@ export class ChatService {
       email: contactUser.email,
       avatar: contactUser.avatar || undefined,
       isOnline: false,
+      publicKey: contactUser.public_key || undefined,
     };
   }
 
@@ -152,23 +160,75 @@ export class ChatService {
       return [];
     }
 
-    return data.map((msg) => ({
-      id: msg.id,
-      senderId: msg.sender_id,
-      receiverId: msg.receiver_id,
-      content: msg.content,
-      timestamp: new Date(msg.created_at),
-      isRead: msg.is_read,
-    }));
+    // Decrypt messages
+    const decryptedMessages = await Promise.all(
+      data.map(async (msg) => {
+        let decryptedContent = msg.content;
+
+        // Only decrypt if the message is encrypted (has encrypted_key and iv)
+        if (msg.encrypted_key && msg.iv && msg.receiver_id === userId) {
+          try {
+            decryptedContent = await EncryptionService.decryptMessage({
+              encryptedContent: msg.content,
+              encryptedKey: msg.encrypted_key,
+              iv: msg.iv,
+            });
+          } catch (error) {
+            console.error('Error decrypting message:', error);
+            decryptedContent = '[Encrypted message - unable to decrypt]';
+          }
+        }
+
+        return {
+          id: msg.id,
+          senderId: msg.sender_id,
+          receiverId: msg.receiver_id,
+          content: decryptedContent,
+          timestamp: new Date(msg.created_at),
+          isRead: msg.is_read,
+        };
+      })
+    );
+
+    return decryptedMessages;
   }
 
-  static async sendMessage(message: Omit<Message, 'id' | 'timestamp'>): Promise<Message | null> {
+  static async sendMessage(
+    message: Omit<Message, 'id' | 'timestamp'>,
+    recipientPublicKey?: string
+  ): Promise<Message | null> {
+    // Encrypt the message if recipient has a public key
+    let encryptedContent = message.content;
+    let encryptedKey = '';
+    let iv = '';
+
+    if (recipientPublicKey) {
+      try {
+        const encrypted = await EncryptionService.encryptMessage(
+          message.content,
+          recipientPublicKey
+        );
+        encryptedContent = encrypted.encryptedContent;
+        encryptedKey = encrypted.encryptedKey;
+        iv = encrypted.iv;
+      } catch (error) {
+        console.error('Error encrypting message:', error);
+        // Fall back to sending unencrypted if encryption fails
+        return null;
+      }
+    } else {
+      // No encryption - this shouldn't happen in production
+      console.warn('Sending unencrypted message - recipient has no public key');
+    }
+
     const { data, error } = await supabase
       .from('messages')
       .insert({
         sender_id: message.senderId,
         receiver_id: message.receiverId,
-        content: message.content,
+        content: encryptedContent,
+        encrypted_key: encryptedKey,
+        iv: iv,
         is_read: message.isRead,
       })
       .select()
@@ -179,11 +239,12 @@ export class ChatService {
       return null;
     }
 
+    // Return the message with decrypted content (for local display)
     return {
       id: data.id,
       senderId: data.sender_id,
       receiverId: data.receiver_id,
-      content: data.content,
+      content: message.content, // Return original unencrypted content
       timestamp: new Date(data.created_at),
       isRead: data.is_read,
     };
@@ -217,13 +278,29 @@ export class ChatService {
           table: 'messages',
           filter: `receiver_id=eq.${userId}`,
         },
-        (payload) => {
+        async (payload) => {
           const msg = payload.new as any;
+          let decryptedContent = msg.content;
+
+          // Decrypt the message if it's encrypted
+          if (msg.encrypted_key && msg.iv) {
+            try {
+              decryptedContent = await EncryptionService.decryptMessage({
+                encryptedContent: msg.content,
+                encryptedKey: msg.encrypted_key,
+                iv: msg.iv,
+              });
+            } catch (error) {
+              console.error('Error decrypting real-time message:', error);
+              decryptedContent = '[Encrypted message - unable to decrypt]';
+            }
+          }
+
           onMessage({
             id: msg.id,
             senderId: msg.sender_id,
             receiverId: msg.receiver_id,
-            content: msg.content,
+            content: decryptedContent,
             timestamp: new Date(msg.created_at),
             isRead: msg.is_read,
           });
