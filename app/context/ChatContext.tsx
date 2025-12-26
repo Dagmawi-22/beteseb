@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, Contact, Message, ChatConversation } from '../types/chat';
 import { ChatService } from '../services/chatService';
 import { EncryptionService } from '../services/encryptionService';
+import { AuthService } from '../services/authService';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
 interface ChatContextType {
@@ -36,9 +37,16 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Initialize data on mount
   useEffect(() => {
     const initializeData = async () => {
+      // Load user ID from storage if not already set
       if (!CURRENT_USER_ID) {
-        setLoading(false);
-        return;
+        const storedUserId = await AuthService.getCurrentUserId();
+        if (storedUserId) {
+          CURRENT_USER_ID = storedUserId;
+        } else {
+          // No user logged in
+          setLoading(false);
+          return;
+        }
       }
 
       try {

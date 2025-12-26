@@ -7,35 +7,48 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useChatContext } from '../context/ChatContext';
+import { setCurrentUserId } from '../context/ChatContext';
+import { AuthService } from '../services/authService';
 import { mockAvatarOptions } from '../mock/data';
 import { AppColors } from '../constants/colors';
 
 export default function OnboardingScreen() {
   const router = useRouter();
-  const { updateCurrentUser } = useChatContext();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [bio, setBio] = useState('Hey there! I am using Beteseb Chat App');
   const [selectedAvatar, setSelectedAvatar] = useState(mockAvatarOptions[0]);
+  const [loading, setLoading] = useState(false);
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     if (!name || !email) {
       alert('Please fill in your name and email');
       return;
     }
 
-    updateCurrentUser({
-      name,
-      email,
-      bio,
-      avatar: selectedAvatar,
-      isOnboarded: true,
-    });
+    setLoading(true);
+    try {
+      // Create user in Supabase
+      const user = await AuthService.signup({
+        name,
+        email,
+        bio,
+        avatar: selectedAvatar,
+      });
 
-    router.replace('/(tabs)');
+      // Set the current user ID for ChatContext
+      setCurrentUserId(user.id);
+
+      // Navigate to main app
+      router.replace('/(tabs)');
+    } catch (error: any) {
+      alert(error.message || 'Failed to create account');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -99,8 +112,16 @@ export default function OnboardingScreen() {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleComplete}>
-          <Text style={styles.buttonText}>Get Started</Text>
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleComplete}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color={AppColors.white} />
+          ) : (
+            <Text style={styles.buttonText}>Get Started</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -177,6 +198,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
     marginBottom: 40,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   buttonText: {
     color: AppColors.white,
