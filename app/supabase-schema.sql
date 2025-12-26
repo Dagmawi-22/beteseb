@@ -108,7 +108,6 @@ CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
 CREATE TRIGGER update_messages_updated_at BEFORE UPDATE ON messages
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Sample data (optional - for testing)
 -- Uncomment to add sample users
 
 -- INSERT INTO users (id, name, email, avatar, bio, is_onboarded) VALUES

@@ -18,7 +18,7 @@ export default function OnboardingScreen() {
   const { updateCurrentUser } = useChatContext();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [bio, setBio] = useState('Hey there! I am using Chat App');
+  const [bio, setBio] = useState('Hey there! I am using Beteseb Chat App');
   const [selectedAvatar, setSelectedAvatar] = useState(mockAvatarOptions[0]);
 
   const handleComplete = () => {

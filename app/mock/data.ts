@@ -5,7 +5,7 @@ export const mockCurrentUser: User = {
   name: 'You',
   email: 'you@example.com',
   avatar: 'https://i.pravatar.cc/150?img=1',
-  bio: 'Hey there! I am using Chat App',
+  bio: 'Hey there! I am using Beteseb Chat App',
   isOnboarded: false, 
 };
 
