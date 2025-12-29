@@ -14,3 +14,4 @@ app/yarn.lock
 server/yarn.lock
 .vscode
 .idea
+node_modules
