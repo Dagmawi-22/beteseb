@@ -12,6 +12,7 @@ app/package-lock.json
 app/package-lock.json
 app/yarn.lock
 server/yarn.lock
+node_modules/
 .vscode
 .idea
 node_modules
