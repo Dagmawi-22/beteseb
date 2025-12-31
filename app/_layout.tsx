@@ -1,3 +1,8 @@
+// Crypto polyfills - MUST be imported first
+import { install } from 'react-native-quick-crypto';
+
+install();
+
 import {
   DarkTheme,
   DefaultTheme,
